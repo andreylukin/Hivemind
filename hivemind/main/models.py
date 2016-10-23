@@ -17,11 +17,7 @@ class Entity(models.Model):
     honey = models.IntegerField(default = 0)
 
     def __str__(self):
-        mainstring = self.name
-        for all in self.classes.all():
-            mainstring += " | " + str(all)
-        return mainstring
-
+        return self.name + "," + self.email + ","
 class Building(models.Model):
     name = models.CharField(max_length = 2000)
     longitude = models.FloatField(default = 0)
