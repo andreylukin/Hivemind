@@ -4,32 +4,36 @@ from django.db import models
 
 # Create your models here.
 class Classes(models.Model):
-        name = models.CharField(max_length = 30)
+    name = models.CharField(max_length = 30)
 
-        def __str__(self):
-            return self.name
+    def __str__(self):
+        return self.name
 
 class Entity(models.Model):
-        name = models.CharField(max_length = 30)
-        email = models.CharField(max_length = 30)
-        password = models.CharField(max_length = 30, default = 'password')
-        classes = models.ManyToManyField(Classes, blank = False)
-        honey = models.IntegerField(default = 0)
+    name = models.CharField(max_length = 30)
+    email = models.CharField(max_length = 30, unique=True)
+    password = models.CharField(max_length = 30, default = 'password')
+    classes = models.ManyToManyField(Classes, blank = True)
+    honey = models.IntegerField(default = 0)
 
-        def __str__(self):
-            return self.name
+    def __str__(self):
+        mainstring = self.name
+        for all in self.classes.all():
+            mainstring += " | " + str(all)
+        return mainstring
 
 class Building(models.Model):
-        name = models.CharField(max_length = 2000)
-        longitude = models.FloatField(default = 0)
-        latitude= models.FloatField(default = 0)
+    name = models.CharField(max_length = 2000)
+    longitude = models.FloatField(default = 0)
+    latitude= models.FloatField(default = 0)
 
-        def __str__(self):
-            return self.name
+    def __str__(self):
+        return self.name
 
 class StudySession(models.Model):
-        entities = models.ManyToManyField(Entity, blank = False)
-        building = models.ForeignKey(Building)
+    entities = models.ManyToManyField(Entity)
+    building = models.ForeignKey(Building)
+    classes = models.ForeignKey(Classes, default = 0)
 
-        def __str__(self):
-            return self.entities.name + " " + self.building.name
+    def __str__(self):
+        return str(self.building)
